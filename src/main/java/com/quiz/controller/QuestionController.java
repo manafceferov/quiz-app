@@ -47,7 +47,6 @@ public class QuestionController extends BaseController{
                        Long id,
                        Model model
     ) {
-
         model.addAttribute("question", service.getById(id));
         model.addAttribute("answers", answerService.getAnswersByQuestionId(id));
         return "admin/question/view";
@@ -76,7 +75,6 @@ public class QuestionController extends BaseController{
             model.addAttribute("errors", bindingResult.getAllErrors());
             return "admin/question/create";
         }
-
         service.save(request, correctAnswerIndex);
         redirectAttributes.addFlashAttribute("success", "Sual əlavə edildi");
         redirectAttributes.addAttribute("topicId", request.getTopicId());

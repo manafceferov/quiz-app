@@ -44,4 +44,5 @@ public interface ParticipantRepository extends JpaRepository<Participant, Long> 
     @Query("SELECT p FROM Participant p WHERE " + "LOWER(CONCAT(p.firstName, ' ', p.lastName, ' ', p.fatherName)) " +
             "LIKE LOWER(CONCAT('%', :name, '%'))")
     Page<Participant> searchByFullName(@Param("name") String name, Pageable pageable);
+
 }

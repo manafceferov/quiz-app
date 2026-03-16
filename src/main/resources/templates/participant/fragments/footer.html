@@ -1,10 +1,10 @@
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-bs4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js"></script>
     <script th:src="@{/participant/js/darkMode.js}"></script>
 
-    <!-- Scroll To Top Button -->
     <style>
         #scrollTopBtn {
             position: fixed;
@@ -32,7 +32,6 @@
     </button>
 
     <script>
-        // Düyməni göstər/gizlət
         const scrollBtn = document.getElementById("scrollTopBtn");
 
         window.onscroll = function () {
@@ -43,12 +42,10 @@
             }
         };
 
-        // Kliklə yuxarı qaldır
         scrollBtn.addEventListener("click", function () {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     </script>
-
 
     </body>
 </html>

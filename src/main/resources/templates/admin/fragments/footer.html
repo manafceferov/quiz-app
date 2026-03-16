@@ -3,6 +3,45 @@
 <script th:src="@{/admin/sb-admin/js/sb-admin-2.min.js}"></script>
 <script th:src="@{/admin/sb-admin/vendor/jquery-easing/jquery.easing.min.js}"></script>
 
+<!-- SIDEBAR FIX - Avtomatik böyüməni dayandır -->
+<script>
+    (function($) {
+        'use strict';
+
+        // Səhifə tam yüklənəndən sonra işə sal
+        $(document).ready(function() {
+
+            // sb-admin-2.min.js-dən sonra işə düşməsi üçün setTimeout
+            setTimeout(function() {
+
+                // Toggle düymələrinin işləməsi üçün event-ləri yenidən qur
+                $('#sidebarToggle, #sidebarToggleTop').off('click').on('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    $('body').toggleClass('sidebar-toggled');
+                    $('.sidebar').toggleClass('toggled');
+
+                    if ($('.sidebar').hasClass('toggled')) {
+                        $('.sidebar .collapse').collapse('hide');
+                        localStorage.setItem('sidebarToggled', 'true');
+                    } else {
+                        localStorage.setItem('sidebarToggled', 'false');
+                    }
+                });
+
+                // Sidebar vəziyyətini yüklə
+                if (localStorage.getItem('sidebarToggled') === 'true') {
+                    $('body').addClass('sidebar-toggled');
+                    $('.sidebar').addClass('toggled');
+                }
+
+            }, 100); // sb-admin-2.min.js yüklənməsini gözlə
+
+        });
+
+    })(jQuery);
+</script>
 
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>

@@ -1,4 +1,5 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark" xmlns:sec="http://www.w3.org/1999/xhtml">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" xmlns:sec="http://www.w3.org/1999/xhtml"
+     xmlns:th="http://www.thymeleaf.org">
     <div class="container-fluid">
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -10,43 +11,167 @@
 
                 <!-- Ana səhifə -->
                 <li class="nav-item">
-                    <a class="nav-link active" th:href="@{/}" aria-current="page">Ana səhifə</a>
+                    <a class="nav-link" th:href="@{/}" data-path="/">Ana səhifə</a>
                 </li>
 
-                <!-- İmtahanlarım (yalnız login olanda) -->
+                <!-- İmtahanlarım -->
                 <li class="nav-item" sec:authorize="hasRole('PARTICIPANT')">
-                    <a class="nav-link" th:href="@{/quiz/my-exams}">İmtahanlar</a>
+                    <a class="nav-link" th:href="@{/quiz/my-exams}" data-path="/quiz/my-exams">İmtahanlar</a>
                 </li>
 
+                <!-- Mövzular -->
                 <li class="nav-item" sec:authorize="hasRole('PARTICIPANT')">
-                    <a class="nav-link" th:href="@{/participant/topics}">Mövzular</a>
+                    <a class="nav-link" th:href="@{/participant/topics}" data-path="/participant/topics">Mövzular</a>
                 </li>
 
-<!--                <li class="nav-item" sec:authorize="hasRole('PARTICIPANT')">-->
-<!--                    <a class="nav-link" href="#" onclick="alert('Mövzular səhifəsi hələki hazır deyil'); return false;">Mövzular</a>-->
-<!--                </li>-->
-
-                <!-- Profil (yalnız login olanda) -->
+                <!-- AI Quiz -->
                 <li class="nav-item" sec:authorize="hasRole('PARTICIPANT')">
-                    <a class="nav-link" th:href="@{/participants/profile}">Profil</a>
+                    <a class="nav-link" th:href="@{/participant/ai-quiz}" data-path="/participant/ai-quiz">
+                        <i class="fas fa-robot"></i> AI Quiz
+                    </a>
                 </li>
 
-                <!-- 🌑 / ☀️ Dark Mode (hər kəs üçün görünür) -->
+                <!-- Dark Mode -->
                 <li class="nav-item ms-3">
-                    <button id="darkModeToggle" class="btn btn-secondary btn-sm" type="button" title="Dark Mode">🌑</button>
+                    <button id="darkModeToggle" class="btn btn-secondary btn-sm" type="button">🌑</button>
                 </li>
 
-                <!-- Logout (yalnız login olanda) -->
-                <li class="nav-item" sec:authorize="hasRole('PARTICIPANT')">
-                    <a class="nav-link btn btn-danger btn-sm ms-2" th:href="@{/logout}">Çıxış</a>
+                <!-- PROFIL AVATAR DROPDOWN -->
+                <li class="nav-item ms-3" sec:authorize="hasRole('PARTICIPANT')" th:if="${participant != null}">
+                    <div class="dropdown">
+                        <a href="#"
+                           class="d-block text-decoration-none"
+                           id="profileDropdown"
+                           data-bs-toggle="dropdown"
+                           aria-expanded="false">
+
+                            <!-- Profil şəkli varsa -->
+                            <img th:if="${participant.attachment != null && participant.attachment.fileUrl != null}"
+                                 th:src="@{${participant.attachment.fileUrl}}"
+                                 alt="Profil"
+                                 class="rounded-circle profile-avatar"
+                                 style="width: 40px; height: 40px; object-fit: cover; border: 2px solid #fff;">
+
+                            <!-- Şəkil yoxdursa - ilk hərf -->
+                            <div th:if="${participant.attachment == null || participant.attachment.fileUrl == null}"
+                                 class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center profile-avatar"
+                                 style="width: 40px; height: 40px; font-size: 18px; font-weight: bold; border: 2px solid #fff;">
+                                <span th:text="${#strings.substring(participant.firstName, 0, 1).toUpperCase()}">A</span>
+                            </div>
+                        </a>
+
+                        <!-- Dropdown menyu -->
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+
+                            <!-- Profil -->
+                            <li>
+                                <a class="dropdown-item" th:href="@{/participants/profile}">
+                                    <i class="fas fa-user me-2"></i> Profil
+                                </a>
+                            </li>
+
+                            <li><hr class="dropdown-divider"></li>
+
+                            <!-- Çıxış -->
+                            <li>
+                                <a class="dropdown-item text-danger" th:href="@{/logout}">
+                                    <i class="fas fa-sign-out-alt me-2"></i> Çıxış
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </li>
 
-                <!-- Login (yalnız login olmayanda) -->
-                <li class="nav-item" sec:authorize="!hasRole('PARTICIPANT')">
-                    <a class="nav-link text-danger" th:href="@{/login}">Giriş</a>
+                <!-- Login -->
+                <li class="nav-item ms-3" sec:authorize="!hasRole('PARTICIPANT')">
+                    <a class="btn btn-outline-light btn-sm" th:href="@{/login}">Giriş</a>
                 </li>
 
             </ul>
         </div>
     </div>
 </nav>
+
+<style>
+    .profile-avatar {
+        cursor: pointer;
+        transition: transform 0.2s ease;
+    }
+
+    .profile-avatar:hover {
+        transform: scale(1.1);
+    }
+
+    .dropdown-menu {
+        min-width: 180px;
+        border-radius: 8px;
+        padding: 0.5rem 0;
+    }
+
+    .dropdown-item {
+        padding: 10px 20px;
+        font-size: 14px;
+        transition: background-color 0.2s;
+    }
+
+    /* Light mode */
+    body:not(.dark-mode) .dropdown-menu {
+        background-color: #ffffff;
+        border: 1px solid #dee2e6;
+    }
+
+    body:not(.dark-mode) .dropdown-item {
+        color: #212529;
+    }
+
+    body:not(.dark-mode) .dropdown-item:hover {
+        background-color: #f8f9fa;
+    }
+
+    body:not(.dark-mode) .dropdown-divider {
+        border-color: #dee2e6;
+    }
+
+    /* Dark mode */
+    body.dark-mode .dropdown-menu {
+        background-color: #343a40;
+        border: 1px solid #495057;
+    }
+
+    body.dark-mode .dropdown-item {
+        color: #ffffff !important;
+    }
+
+    body.dark-mode .dropdown-item:hover {
+        background-color: #495057;
+    }
+
+    body.dark-mode .dropdown-divider {
+        border-color: #495057;
+    }
+
+    /* Çıxış düyməsi - HƏR İKİ MODE-DA QIRMIZI */
+    body:not(.dark-mode) .dropdown-item.text-danger {
+        color: #dc3545 !important;
+    }
+
+    body.dark-mode .dropdown-item.text-danger {
+        color: #dc3545 !important;
+    }
+
+    .dropdown-item.text-danger:hover {
+        background-color: rgba(220, 53, 69, 0.1) !important;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const currentPath = window.location.pathname;
+        const navLinks = document.querySelectorAll('.navbar-nav .nav-link[data-path]');
+        navLinks.forEach(link => {
+            if (link.getAttribute('data-path') === currentPath) {
+                link.classList.add('active');
+            }
+        });
+    });
+</script>

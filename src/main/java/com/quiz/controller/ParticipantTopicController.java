@@ -2,12 +2,16 @@ package com.quiz.controller;
 
 import com.quiz.dto.topic.TopicInsertRequest;
 import com.quiz.dto.topic.TopicUpdateRequest;
+import com.quiz.entity.Participant;
 import com.quiz.entity.Topic;
+import com.quiz.service.ParticipantService;
 import com.quiz.service.TopicService;
 import com.quiz.util.session.AuthSessionData;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,25 +26,34 @@ public class ParticipantTopicController {
 
     private final TopicService service;
     private final AuthSessionData authSessionData;
+    private final ParticipantService participantService;
 
     public ParticipantTopicController(TopicService service,
-                                      AuthSessionData authSessionData
+                                      AuthSessionData authSessionData,
+                                      ParticipantService participantService
     ) {
         this.service = service;
         this.authSessionData = authSessionData;
+        this.participantService = participantService;
     }
 
     @GetMapping
     public String index(@RequestParam(required = false) String name,
                         @RequestParam(defaultValue = "0") int page,
                         @RequestParam(defaultValue = "10") int size,
-                        Model model
+                        Model model,
+                        Authentication authentication
     ) {
         Long participantId = authSessionData.getParticipantSessionData().getId();
         Pageable pageable = PageRequest.of(page, size);
         model.addAttribute("topics", service.getAllByParticipant(participantId, name, pageable));
         model.addAttribute("name", name);
         model.addAttribute("currentParticipantId", participantId);
+        if (authentication != null && authentication.isAuthenticated()) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            Participant participant = participantService.findByEmail(userDetails.getUsername());
+            model.addAttribute("participant", participant);
+        }
         return "participant/topic/index";
     }
 

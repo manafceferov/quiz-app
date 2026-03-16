@@ -51,7 +51,7 @@
             <div>
                 <th:block th:if="${topic.byParticipant == currentParticipantId}">
                     <a th:href="@{/participant/questions/topic/{topicId}/create(topicId=${topicId})}"
-                       class="btn btn-success mr-2">Əlavə Et</a>
+                       class="btn btn-success me-2">Əlavə Et</a>
                 </th:block>
                 <a th:href="@{/participant/topics}" class="btn btn-secondary">Geri</a>
             </div>
@@ -77,22 +77,29 @@
                         <td class="align-middle">
                             <th:block th:if="${question.byParticipant == currentParticipantId}">
                                 <a th:href="@{/participant/questions/{id}/edit(id=${question.id})}"
-                                   class="btn btn-info btn-sm btn-circle">
+                                   class="btn btn-info btn-sm btn-circle"
+                                   data-bs-toggle="tooltip" data-bs-placement="top" title="Düzəliş">
                                     <i class="fas fa-pencil-alt"></i>
                                 </a>
                                 <a href="#"
                                    th:data-url="@{/participant/questions/{id}/delete(id=${question.id}, topicId=${topicId})}"
-                                   class="btn btn-danger btn-sm btn-circle delete-btn">
+                                   class="btn btn-danger btn-sm btn-circle delete-btn"
+                                   data-bs-toggle="tooltip" data-bs-placement="top" title="Sil">
                                     <i class="far fa-trash-alt"></i>
                                 </a>
                                 <form th:action="@{/participant/questions/change-status/question/{id}/status/{status}(id=${question.id}, status=${question.isActive ? 0 : 1})}"
                                       method="GET" class="d-inline-block m-0 p-0">
                                     <input type="hidden" name="topicId" th:value="${topicId}"/>
                                     <input type="checkbox" th:checked="${question.isActive}"
-                                           data-toggle="toggle" data-on='<i class="fas fa-check"></i> On'
-                                           data-off='<i class="fas fa-times"></i> Off'
-                                           data-onstyle="success" data-offstyle="danger"
-                                           data-size="sm" onchange="this.form.submit()"/>
+                                           data-toggle="toggle"
+                                           data-onstyle="success"
+                                           data-offstyle="danger"
+                                           data-size="sm"
+                                           data-on="<i class='fas fa-check'></i> On"
+                                           data-off="<i class='fas fa-times'></i> Off"
+                                           data-bs-toggle="tooltip"
+                                           th:attr="title=${question.isActive} ? 'Aktiv' : 'Passiv'"
+                                           onchange="this.form.submit()"/>
                                 </form>
                             </th:block>
                             <th:block th:unless="${question.byParticipant == currentParticipantId}">
@@ -114,11 +121,11 @@
         <div class="modal-content border-danger">
             <div class="modal-header">
                 <h5 class="modal-title text-danger">Silinsin?</h5>
-                <button type="button" class="close" data-dismiss="modal">×</button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">Bu qeydi silmək istədiyinizə əminsiniz?</div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Çıx</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Çıx</button>
                 <button type="button" class="btn btn-danger" id="modal-confirm_delete">Sil</button>
             </div>
         </div>
@@ -127,8 +134,10 @@
 
 <script th:inline="javascript">
     document.addEventListener('DOMContentLoaded', () => {
+        // Alert auto hide
         setTimeout(() => $(".alert").hide(2000), 3000);
 
+        // Bootstrap Toggle with tooltip
         $('[data-toggle="toggle"]').bootstrapToggle({
             on: '<i class="fas fa-check"></i> On',
             off: '<i class="fas fa-times"></i> Off',
@@ -136,6 +145,7 @@
             offstyle: 'danger'
         });
 
+        // Delete modal
         $('.delete-btn').on('click', e => {
             e.preventDefault();
             $('#modal-confirm_delete').data('url', e.currentTarget.dataset.url);
@@ -144,6 +154,12 @@
 
         $('#modal-confirm_delete').on('click', () => {
             window.location.href = $('#modal-confirm_delete').data('url');
+        });
+
+        // Bootstrap 5 tooltips
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
         });
     });
 </script>
