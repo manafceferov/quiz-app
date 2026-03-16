@@ -1,0 +1,556 @@
+<th:block th:replace="~{participant/fragments/header}"></th:block>
+
+<style>
+    .ai-container {
+        max-width: 1000px;
+        margin: 50px auto;
+    }
+
+    .chat-container {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 20px;
+        min-height: 400px;
+        max-height: 600px;
+        overflow-y: auto;
+        margin-bottom: 20px;
+    }
+
+    /* Dark mode support */
+    body.dark-mode .chat-container {
+        background: #2d3748;
+    }
+
+    body.dark-mode .card {
+        background: #1a202c;
+        color: #e2e8f0;
+    }
+
+    body.dark-mode .card-body {
+        background: #1a202c;
+    }
+
+    .message {
+        margin: 15px 0;
+        padding: 15px;
+        border-radius: 10px;
+        animation: fadeIn 0.3s;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .user-message {
+        background: #007bff;
+        color: white;
+        margin-left: 20%;
+        text-align: right;
+    }
+
+    .ai-message {
+        background: white;
+        border: 1px solid #dee2e6;
+        margin-right: 20%;
+        color: #000;
+    }
+
+    body.dark-mode .ai-message {
+        background: #2d3748;
+        border-color: #4a5568;
+        color: #e2e8f0;
+    }
+
+    .typing-indicator {
+        display: none;
+        padding: 10px;
+        color: #6c757d;
+    }
+
+    body.dark-mode .typing-indicator {
+        color: #cbd5e0;
+    }
+
+    .typing-indicator.active {
+        display: block;
+    }
+
+    .typing-indicator span {
+        height: 10px;
+        width: 10px;
+        background: #6c757d;
+        border-radius: 50%;
+        display: inline-block;
+        margin: 0 2px;
+        animation: typing 1.4s infinite;
+    }
+
+    body.dark-mode .typing-indicator span {
+        background: #cbd5e0;
+    }
+
+    .typing-indicator span:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+
+    .typing-indicator span:nth-child(3) {
+        animation-delay: 0.4s;
+    }
+
+    @keyframes typing {
+        0%, 60%, 100% { transform: translateY(0); }
+        30% { transform: translateY(-10px); }
+    }
+
+    .question-preview {
+        background: white;
+        border: 1px solid #dee2e6;
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 8px;
+        border-left: 4px solid #28a745;
+        color: #000;
+    }
+
+    body.dark-mode .question-preview {
+        background: #2d3748;
+        border-color: #4a5568;
+        color: #e2e8f0;
+    }
+
+    .answer-item {
+        padding: 8px;
+        margin: 5px 0;
+        border-radius: 5px;
+        background: #f8f9fa;
+        color: #000;
+    }
+
+    body.dark-mode .answer-item {
+        background: #1a202c;
+        color: #e2e8f0;
+    }
+
+    .answer-item.correct {
+        background: #d4edda;
+        border-left: 3px solid #28a745;
+        font-weight: 500;
+        color: #155724;
+    }
+
+    body.dark-mode .answer-item.correct {
+        background: #22543d;
+        color: #9ae6b4;
+    }
+
+    .prompt-input {
+        border: 2px solid #dee2e6;
+        border-radius: 10px;
+        padding: 15px;
+        font-size: 16px;
+        resize: vertical;
+        background: white;
+        color: #000;
+    }
+
+    body.dark-mode .prompt-input {
+        background: #2d3748;
+        color: #e2e8f0;
+        border-color: #4a5568;
+    }
+
+    .prompt-input:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+        outline: none;
+    }
+
+    body.dark-mode .prompt-input::placeholder {
+        color: #a0aec0;
+    }
+
+    .example-prompts {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 15px 0;
+    }
+
+    .example-prompt {
+        background: #e9ecef;
+        padding: 8px 15px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.3s;
+        border: 1px solid transparent;
+        color: #000;
+    }
+
+    body.dark-mode .example-prompt {
+        background: #2d3748;
+        color: #e2e8f0;
+        border-color: #4a5568;
+    }
+
+    .example-prompt:hover {
+        background: #007bff;
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    .card-gradient-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    body.dark-mode .alert-info {
+        background: #2c5282;
+        border-color: #2b6cb0;
+        color: #bee3f8;
+    }
+
+    body.dark-mode .alert-success {
+        background: #22543d;
+        border-color: #276749;
+        color: #9ae6b4;
+    }
+
+    body.dark-mode .text-muted {
+        color: #a0aec0 !important;
+    }
+
+    body.dark-mode h4, body.dark-mode h5 {
+        color: #e2e8f0;
+    }
+</style>
+
+<div class="container ai-container">
+
+    <div class="card shadow-lg">
+        <div class="card-header card-gradient-header text-white">
+            <h3 class="mb-0">
+                <i class="fas fa-robot"></i> AI Quiz Yaradıcı
+            </h3>
+            <p class="mb-0 mt-2 small">İstədiyiniz mövzu haqqında AI ilə danışın, o sizə quiz yaradacaq</p>
+        </div>
+
+        <div class="card-body">
+
+            <!-- Chat Container -->
+            <div class="chat-container" id="chatContainer">
+                <div class="ai-message message">
+                    <strong><i class="fas fa-robot"></i> AI Köməkçi:</strong>
+                    <p class="mb-0 mt-2">
+                        Salam! Mən sizə quiz yaratmaqda kömək edəcəyəm.
+                        Sadəcə mənə nə haqqında quiz yaratmaq istədiyinizi deyin.
+                    </p>
+                    <p class="mb-0 mt-2 text-muted small">
+                        <i class="fas fa-lightbulb"></i> Məsələn: "Java dilində OOP konseptləri haqqında 5 sual yarat"
+                    </p>
+                </div>
+            </div>
+
+            <div class="typing-indicator" id="typingIndicator">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span class="ms-2">Cavab yazılır...</span>
+            </div>
+
+            <!-- Example Prompts -->
+            <div class="example-prompts">
+                <small class="text-muted me-2"><i class="fas fa-magic"></i> Nümunələr:</small>
+                <div class="example-prompt" onclick="fillPrompt('Java dilində OOP konseptləri haqqında 5 sual yarat')">
+                    <i class="fab fa-java"></i> Java OOP - 5 sual
+                </div>
+                <div class="example-prompt" onclick="fillPrompt('Spring Boot haqqında orta çətinlikdə 10 sual yarat')">
+                    <i class="fas fa-leaf"></i> Spring Boot - 10 sual
+                </div>
+                <div class="example-prompt" onclick="fillPrompt('PostgreSQL verilənlər bazası haqqında çətin 7 sual yarat')">
+                    <i class="fas fa-database"></i> PostgreSQL - 7 sual
+                </div>
+                <div class="example-prompt" onclick="fillPrompt('HTML və CSS əsasları haqqında asan 8 sual yarat')">
+                    <i class="fab fa-html5"></i> HTML/CSS - 8 sual
+                </div>
+                <div class="example-prompt" onclick="fillPrompt('JavaScript ES6 xüsusiyyətləri haqqında 6 sual yarat')">
+                    <i class="fab fa-js"></i> JavaScript - 6 sual
+                </div>
+            </div>
+
+            <!-- Input Form -->
+            <form id="promptForm" class="mt-3">
+                <div class="input-group">
+                    <textarea class="form-control prompt-input"
+                              id="promptInput"
+                              rows="3"
+                              placeholder="Məsələn: Java dilində Spring Framework haqqında 10 sual yarat..."
+                              required></textarea>
+                </div>
+                <div class="d-flex justify-content-end mt-3 gap-2">
+                    <button type="button" class="btn btn-outline-secondary" onclick="clearChat()">
+                        <i class="fas fa-trash"></i> Təmizlə
+                    </button>
+                    <button type="submit" class="btn btn-primary btn-lg" id="sendBtn">
+                        <i class="fas fa-paper-plane"></i> Göndər
+                    </button>
+                </div>
+            </form>
+
+            <!-- Results Container -->
+            <div id="resultsContainer" style="display: none;">
+                <hr class="my-4">
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle"></i> Quiz uğurla yaradıldı!
+                </div>
+
+                <h4><i class="fas fa-clipboard-check"></i> Yaradılan Quiz</h4>
+                <div id="quizPreview"></div>
+
+                <form id="saveForm" th:action="@{/participant/ai-quiz/save}" method="post" onsubmit="return validateForm()">
+                    <input type="hidden" name="topicName" id="topicName">
+                    <input type="hidden" name="questionsJson" id="questionsJson">
+
+                    <div class="d-flex justify-content-end gap-2 mt-4">
+                        <button type="button" class="btn btn-outline-secondary btn-lg" onclick="generateNew()">
+                            <i class="fas fa-redo"></i> Yenidən Yarat
+                        </button>
+                        <button type="submit" class="btn btn-success btn-lg" id="saveBtn">
+                            <i class="fas fa-save"></i> Quizi Saxla
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<script>
+    let currentQuizData = null;
+
+    // CSRF token əldə et
+    function getCsrfToken() {
+        const metaToken = document.querySelector('meta[name="_csrf"]');
+        if (metaToken) {
+            return metaToken.getAttribute('content');
+        }
+
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+            const [name, value] = cookie.trim().split('=');
+            if (name === 'XSRF-TOKEN') {
+                return decodeURIComponent(value);
+            }
+        }
+        return '';
+    }
+
+    // Page yüklənəndə CSRF əlavə et
+    document.addEventListener('DOMContentLoaded', function() {
+        const saveForm = document.getElementById('saveForm');
+        if (saveForm && !saveForm.querySelector('input[name="_csrf"]')) {
+            const csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = '_csrf';
+            csrfInput.value = getCsrfToken();
+            saveForm.appendChild(csrfInput);
+        }
+
+        console.log('Page loaded, CSRF:', getCsrfToken());
+    });
+
+    // Form validasiyası
+    function validateForm() {
+        const topicName = document.getElementById('topicName').value;
+        const questionsJson = document.getElementById('questionsJson').value;
+
+        console.log('Form submit - Topic:', topicName);
+        console.log('Form submit - Questions:', questionsJson);
+
+        if (!topicName || !questionsJson) {
+            alert('Xəta: Quiz məlumatları tapılmadı. Yenidən quiz yaradın.');
+            return false;
+        }
+
+        document.getElementById('saveBtn').disabled = true;
+        document.getElementById('saveBtn').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saxlanılır...';
+
+        return true;
+    }
+
+    // Prompt form submit
+    document.getElementById('promptForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const promptInput = document.getElementById('promptInput');
+        const prompt = promptInput.value.trim();
+
+        console.log('Prompt:', prompt);
+
+        if (!prompt) {
+            alert('Xahiş edirəm bir şey yazın');
+            return;
+        }
+
+        addMessage(prompt, 'user');
+        promptInput.value = '';
+
+        document.getElementById('typingIndicator').classList.add('active');
+        document.getElementById('sendBtn').disabled = true;
+
+        try {
+            console.log('API çağırışı göndərilir...');
+
+            const response = await fetch('/participant/ai-quiz/generate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': getCsrfToken()
+                },
+                body: JSON.stringify({ prompt: prompt })
+            });
+
+            console.log('Response status:', response.status);
+
+            if (!response.ok) {
+                throw new Error(`Server xətası: ${response.status}`);
+            }
+
+            const result = await response.json();
+            console.log('Result:', result);
+
+            if (result.success && result.data) {
+                currentQuizData = result.data;
+                displayQuiz(result.data);
+                addMessage('✅ Quiz uğurla yaradıldı! Aşağıda nəticəni görə bilərsiniz.', 'ai');
+            } else {
+                addMessage('❌ Xəta: ' + (result.error || 'Naməlum xəta'), 'ai');
+            }
+
+        } catch (error) {
+            console.error('Xəta:', error);
+            addMessage('❌ Xəta baş verdi: ' + error.message, 'ai');
+        } finally {
+            document.getElementById('typingIndicator').classList.remove('active');
+            document.getElementById('sendBtn').disabled = false;
+        }
+    });
+
+    function addMessage(text, type) {
+        const chatContainer = document.getElementById('chatContainer');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${type}-message`;
+
+        const icon = type === 'user' ? '<i class="fas fa-user"></i>' : '<i class="fas fa-robot"></i>';
+        const label = type === 'user' ? 'Siz' : 'AI Köməkçi';
+
+        messageDiv.innerHTML = `
+            <strong>${icon} ${label}:</strong>
+            <p class="mb-0 mt-2">${escapeHtml(text)}</p>
+        `;
+
+        chatContainer.appendChild(messageDiv);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    function displayQuiz(data) {
+        console.log('displayQuiz called with:', data);
+
+        if (!data || !data.questions || data.questions.length === 0) {
+            alert('Xəta: Quiz məlumatları düzgün deyil');
+            return;
+        }
+
+        const resultsContainer = document.getElementById('resultsContainer');
+        const quizPreview = document.getElementById('quizPreview');
+
+        let html = `
+            <div class="alert alert-info">
+                <strong><i class="fas fa-book"></i> Mövzu:</strong> ${escapeHtml(data.topicName)}<br>
+                <strong><i class="fas fa-list-ol"></i> Sual sayı:</strong> ${data.questions.length}
+            </div>
+        `;
+
+        data.questions.forEach((q, index) => {
+            html += `
+                <div class="question-preview">
+                    <h5><span class="badge bg-primary">${index + 1}</span> ${escapeHtml(q.questionText)}</h5>
+                    <div class="mt-3">
+                        ${q.answers.map((a, i) => `
+                            <div class="answer-item ${a.isCorrect ? 'correct' : ''}">
+                                <strong>${String.fromCharCode(65 + i)}.</strong> ${escapeHtml(a.text)}
+                                ${a.isCorrect ? '<i class="fas fa-check-circle text-success float-end"></i>' : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        });
+
+        quizPreview.innerHTML = html;
+
+        // Form məlumatlarını doldur
+        document.getElementById('topicName').value = data.topicName;
+        document.getElementById('questionsJson').value = JSON.stringify(data.questions);
+
+        console.log('Topic name set:', data.topicName);
+        console.log('Questions JSON set:', JSON.stringify(data.questions));
+
+        resultsContainer.style.display = 'block';
+        document.getElementById('saveBtn').disabled = false;
+
+        setTimeout(() => {
+            resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+    }
+
+    function fillPrompt(text) {
+        document.getElementById('promptInput').value = text;
+        document.getElementById('promptInput').focus();
+    }
+
+    function clearChat() {
+        if (!confirm('Chat tarixçəsini təmizləmək istədiyinizə əminsiniz?')) {
+            return;
+        }
+
+        const chatContainer = document.getElementById('chatContainer');
+        chatContainer.innerHTML = `
+            <div class="ai-message message">
+                <strong><i class="fas fa-robot"></i> AI Köməkçi:</strong>
+                <p class="mb-0 mt-2">
+                    Salam! Mən sizə quiz yaratmaqda kömək edəcəyəm.
+                    Sadəcə mənə nə haqqında quiz yaratmaq istədiyinizi deyin.
+                </p>
+                <p class="mb-0 mt-2 text-muted small">
+                    <i class="fas fa-lightbulb"></i> Məsələn: "Java dilində OOP konseptləri haqqında 5 sual yarat"
+                </p>
+            </div>
+        `;
+        document.getElementById('resultsContainer').style.display = 'none';
+        document.getElementById('promptInput').value = '';
+        currentQuizData = null;
+    }
+
+    function generateNew() {
+        document.getElementById('resultsContainer').style.display = 'none';
+        document.getElementById('promptInput').focus();
+        document.getElementById('promptInput').value = '';
+        currentQuizData = null;
+        addMessage('Yaxşı, yeni quiz yaratmağa hazıram. Nə haqqında sual yaratmaq istəyirsiniz?', 'ai');
+    }
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    document.getElementById('promptInput').addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = (this.scrollHeight) + 'px';
+    });
+</script>
+<th:block th:replace="~{participant/fragments/footer}"></th:block>

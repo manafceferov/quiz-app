@@ -2,12 +2,16 @@ package com.quiz.controller;
 
 import com.quiz.dto.exam.QuestionExamDto;
 import com.quiz.dto.examdetail.ParticipantQuizResultDetail;
+import com.quiz.entity.Participant;
 import com.quiz.entity.QuizResult;
+import com.quiz.service.ParticipantService;
 import com.quiz.util.session.AuthSessionData;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.ui.Model;
 import com.quiz.dto.paticipantquiz.ParticipantQuizResultList;
 import com.quiz.dto.paticipantquiz.QuizResultInsertRequest;
@@ -23,12 +27,15 @@ public class QuizResultController extends BaseController {
 
     private final QuizResultService quizResultService;
     private final AuthSessionData authSessionData;
+    private final ParticipantService participantService;
 
     public QuizResultController(QuizResultService quizResultService,
-                                AuthSessionData authSessionData
+                                AuthSessionData authSessionData,
+                                ParticipantService participantService
     ) {
         this.quizResultService = quizResultService;
         this.authSessionData = authSessionData;
+        this.participantService = participantService;
     }
 
 //    @PostMapping("")
@@ -51,7 +58,8 @@ public class QuizResultController extends BaseController {
     public String myExams(Model model,
                           @RequestParam(required = false) String topic,
                           @RequestParam(defaultValue = "0") int page,
-                          @RequestParam(defaultValue = "10") int size
+                          @RequestParam(defaultValue = "10") int size,
+                          Authentication authentication
     ) {
         Pageable pageable = PageRequest.of(page, size);
         Page<ParticipantQuizResultList> resultPage =
@@ -61,6 +69,11 @@ public class QuizResultController extends BaseController {
         model.addAttribute("totalPages", resultPage.getTotalPages());
         model.addAttribute("totalItems", resultPage.getTotalElements());
         model.addAttribute("topic", topic);
+        if (authentication != null && authentication.isAuthenticated()) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            Participant participant = participantService.findByEmail(userDetails.getUsername());
+            model.addAttribute("participant", participant);
+        }
         return "participant/my-exams";
     }
 

@@ -3,7 +3,9 @@ package com.quiz.controller;
 import com.quiz.dto.question.QuestionEditDto;
 import com.quiz.dto.question.QuestionInsertRequest;
 import com.quiz.dto.question.QuestionUpdateRequest;
+import com.quiz.entity.Participant;
 import com.quiz.service.AnswerService;
+import com.quiz.service.ParticipantService;
 import com.quiz.service.QuestionService;
 import com.quiz.service.TopicService;
 import com.quiz.util.session.AuthSessionData;
@@ -11,6 +13,8 @@ import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,17 +31,20 @@ public class ParticipantQuestionController {
     private final AnswerService answerService;
     private final AuthSessionData authSessionData;
     private final TopicService topicService;
+    private final ParticipantService participantService;
 
 
     public ParticipantQuestionController(QuestionService service,
                                          AnswerService answerService,
                                          AuthSessionData authSessionData,
-                                         TopicService topicService
+                                         TopicService topicService,
+                                         ParticipantService participantService
     ) {
         this.service = service;
         this.answerService = answerService;
         this.authSessionData = authSessionData;
         this.topicService = topicService;
+        this.participantService = participantService;
     }
 
     @GetMapping("/topic/{topicId}")
@@ -45,7 +52,8 @@ public class ParticipantQuestionController {
                         @PathVariable Long topicId,
                         @RequestParam(defaultValue = "0") int page,
                         @RequestParam(defaultValue = "10") int size,
-                        @RequestParam(required = false) String keyword
+                        @RequestParam(required = false) String keyword,
+                        Authentication authentication
     ) {
         Pageable pageable = PageRequest.of(page, size);
         Page<QuestionEditDto> questions = service.getQuestionsWithParticipantByTopic(topicId, keyword, pageable);
@@ -54,6 +62,12 @@ public class ParticipantQuestionController {
         model.addAttribute("currentParticipantId", authSessionData.getParticipantSessionData().getId());
         model.addAttribute("topicId", topicId);
         model.addAttribute("keyword", keyword);
+        if (authentication != null && authentication.isAuthenticated()) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            Participant participant = participantService.findByEmail(userDetails.getUsername());
+            model.addAttribute("participant", participant);
+        }
+
         return "participant/question/index";
     }
 

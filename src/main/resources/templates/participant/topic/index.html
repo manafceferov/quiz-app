@@ -15,6 +15,11 @@
         color: #ffffff !important;
         opacity: 1;
     }
+
+    .card-header-custom {
+        background-color: #000000 !important;
+        color: #ffffff !important;
+    }
 </style>
 
 <div class="px-4 mt-4 w-100">
@@ -44,9 +49,9 @@
 
     <div class="card shadow mb-4 w-100">
 
-        <div class="card-header d-flex justify-content-between align-items-center">
+        <div class="card-header card-header-custom d-flex justify-content-between align-items-center">
             <h5 class="m-0">İmtahan Mövzuları</h5>
-            <a th:href="@{/participant/topics/create}" class="btn btn-dark">Əlavə Et</a>
+            <a th:href="@{/participant/topics/create}" class="btn btn-success">Əlavə Et</a>
         </div>
         <div class="card-body">
             <div class="table-responsive w-100">
@@ -70,15 +75,18 @@
                         <th class="align-middle">
                             <th:block th:if="${topic.byParticipant == currentParticipantId}">
                                 <a th:href="@{/participant/questions/topic/{id}(id=${topic.id})}"
-                                   class="btn btn-success btn-sm btn-circle">
+                                   class="btn btn-success btn-sm btn-circle"
+                                   data-bs-toggle="tooltip" data-bs-placement="top" title="Bax">
                                     <i class="fas fa-eye"></i>
                                 </a>
                                 <a th:href="@{/participant/topics/{id}/edit(id=${topic.id})}"
-                                   class="btn btn-info btn-sm btn-circle">
+                                   class="btn btn-info btn-sm btn-circle"
+                                   data-bs-toggle="tooltip" data-bs-placement="top" title="Düzəliş">
                                     <i class="fas fa-pencil-alt"></i>
                                 </a>
                                 <a href="#" th:data-url="@{/participant/topics/{id}/delete(id=${topic.id})}"
-                                   class="btn btn-danger btn-sm btn-circle delete-btn">
+                                   class="btn btn-danger btn-sm btn-circle delete-btn"
+                                   data-bs-toggle="tooltip" data-bs-placement="top" title="Sil">
                                     <i class="far fa-trash-alt"></i>
                                 </a>
                                 <form th:action="@{/participant/topics/change-status/topic/{id}/status/{status}(id=${topic.id}, status=${topic.isActive ? 0 : 1})}"
@@ -94,7 +102,8 @@
                             </th:block>
                             <th:block th:unless="${topic.byParticipant == currentParticipantId}">
                                 <a th:href="@{/participant/questions/topic/{id}(id=${topic.id})}"
-                                   class="btn btn-success btn-sm btn-circle">
+                                   class="btn btn-success btn-sm btn-circle"
+                                   data-bs-toggle="tooltip" data-bs-placement="top" title="Bax">
                                     <i class="fas fa-eye"></i>
                                 </a>
                             </th:block>
@@ -114,13 +123,13 @@
         <div class="modal-content border-danger">
             <div class="modal-header">
                 <h5 class="modal-title text-danger">Silinsin?</h5>
-                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 Bu qeydi silmək istədiyinizə əminsiniz?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Çıx</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Çıx</button>
                 <button type="button" class="btn btn-danger" id="modal-confirm_delete">Sil</button>
             </div>
         </div>
@@ -129,8 +138,10 @@
 
 <script th:inline="javascript">
     document.addEventListener('DOMContentLoaded', () => {
+        // Alert auto hide
         setTimeout(() => $(".alert").hide(2000), 3000);
 
+        // Bootstrap Toggle
         $('[data-toggle="toggle"]').bootstrapToggle({
             on: '<i class="fas fa-check"></i> On',
             off: '<i class="fas fa-times"></i> Off',
@@ -138,6 +149,7 @@
             offstyle: 'danger'
         });
 
+        // Delete modal
         $('.delete-btn').on('click', e => {
             e.preventDefault();
             $('#modal-confirm_delete').data('url', e.currentTarget.dataset.url);
@@ -146,6 +158,12 @@
 
         $('#modal-confirm_delete').on('click', () => {
             window.location.href = $('#modal-confirm_delete').data('url');
+        });
+
+        // Enable Bootstrap tooltips
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
         });
     });
 </script>

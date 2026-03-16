@@ -3,67 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <title>Keçmiş İmtahanlar</title>
-
+    <link rel="icon" type="image/x-icon" th:href="@{/files/owl-11.png}">
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-          rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
-        .search-wrapper {
-            max-width: 500px;
-            margin: 0 auto;
-        }
-
-        body:not(.dark-mode) input.form-control::placeholder {
-            color: #6c757d !important;
-            opacity: 1;
-        }
-
-        body.dark-mode input.form-control::placeholder {
-            color: #ffffff !important;
-            opacity: 1;
-        }
+        .search-wrapper { max-width: 500px; margin: 0 auto; }
+        body:not(.dark-mode) input.form-control::placeholder { color: #6c757d !important; opacity: 1; }
+        body.dark-mode input.form-control::placeholder { color: #ffffff !important; opacity: 1; }
     </style>
 </head>
-
 <body>
 
 <th:block th:replace="~{participant/fragments/header}"></th:block>
 
 <div class="container-fluid mt-5 pb-5">
-
     <h2 class="mb-4 text-center">Keçmiş İmtahanlar</h2>
 
     <div class="search-wrapper mb-4">
         <form th:action="@{/quiz/my-exams}" method="get" class="d-flex">
-
-            <input type="text"
-                   name="topic"
-                   class="form-control"
-                   placeholder="Mövzu axtar"
-                   th:value="${topic}"/>
-
-            <button type="submit" class="btn btn-primary ms-2">
-                Axtar
-            </button>
-
-            <a th:href="@{/quiz/my-exams}" class="btn btn-outline-warning ms-2">
-                Sıfırla
-            </a>
-
+            <input type="text" name="topic" class="form-control" placeholder="Mövzu axtar" th:value="${topic}"/>
+            <button type="submit" class="btn btn-primary ms-2">Axtar</button>
+            <a th:href="@{/quiz/my-exams}" class="btn btn-outline-warning ms-2">Sıfırla</a>
         </form>
     </div>
 
-    <div th:if="${#lists.isEmpty(results)}"
-         id="noResultsAlert"
-         class="alert alert-info text-center fade show">
+    <div th:if="${#lists.isEmpty(results)}" id="noResultsAlert" class="alert alert-info text-center fade show">
         Hələ ki, keçmiş imtahan nəticələriniz yoxdur.
     </div>
 
     <div class="table-responsive" style="min-height: 500px;">
         <table class="table table-bordered table-hover align-middle text-center">
-
             <thead class="table-dark">
             <tr>
                 <th>#</th>
@@ -74,7 +44,6 @@
                 <th>Ətraflı</th>
             </tr>
             </thead>
-
             <tbody>
             <tr th:each="result, iterStat : ${results}">
                 <td th:text="${iterStat.index + 1 + (currentPage * 10)}">1</td>
@@ -83,72 +52,46 @@
                 <td th:text="${result.correctAnswersCount}">0</td>
                 <td th:text="${result.correctPercent + ' %'}">0%</td>
                 <td>
-                    <a th:href="@{'/quiz/participant/exam-detail/' + ${result.id}}"
-                       class="btn btn-primary btn-sm">
+                    <a th:href="@{'/quiz/participant/exam-detail/' + ${result.id}}" class="btn btn-primary btn-sm">
                         Detallar
                     </a>
                 </td>
             </tr>
-
             <tr th:if="${#lists.isEmpty(results)}">
-                <td colspan="6" class="text-center">
-                    Məlumat yoxdur
-                </td>
+                <td colspan="6" class="text-center">Məlumat yoxdur</td>
             </tr>
             </tbody>
-
         </table>
     </div>
 
     <nav th:if="${totalPages > 1}" class="mt-3">
         <ul class="pagination justify-content-start mb-0">
-
-            <li class="page-item"
-                th:classappend="${currentPage == 0} ? 'disabled'">
-                <a class="page-link"
-                   th:href="@{/quiz/my-exams(page=${currentPage - 1}, topic=${topic})}">
-                    Əvvəlki
-                </a>
+            <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                <a class="page-link" th:href="@{/quiz/my-exams(page=${currentPage - 1}, topic=${topic})}">Əvvəlki</a>
             </li>
-
-            <li class="page-item"
-                th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+            <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
                 th:classappend="${i == currentPage} ? 'active'">
-                <a class="page-link"
-                   th:href="@{/quiz/my-exams(page=${i}, topic=${topic})}"
-                   th:text="${i + 1}">
-                </a>
+                <a class="page-link" th:href="@{/quiz/my-exams(page=${i}, topic=${topic})}" th:text="${i + 1}"></a>
             </li>
-
-            <li class="page-item"
-                th:classappend="${currentPage + 1 == totalPages} ? 'disabled'">
-                <a class="page-link"
-                   th:href="@{/quiz/my-exams(page=${currentPage + 1}, topic=${topic})}">
-                    Növbəti
-                </a>
+            <li class="page-item" th:classappend="${currentPage + 1 == totalPages} ? 'disabled'">
+                <a class="page-link" th:href="@{/quiz/my-exams(page=${currentPage + 1}, topic=${topic})}">Növbəti</a>
             </li>
-
         </ul>
     </nav>
-
 </div>
 
 <th:block th:replace="~{participant/fragments/footer}"></th:block>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- ❌ SİLİNDİ - Bootstrap JS artıq footer-dadır -->
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const alertBox = document.getElementById("noResultsAlert");
-
         if (alertBox) {
             setTimeout(() => {
                 alertBox.classList.add("fade");
                 alertBox.classList.remove("show");
-
-                setTimeout(() => {
-                    alertBox.remove();
-                }, 500);
+                setTimeout(() => alertBox.remove(), 500);
             }, 2000);
         }
     });
