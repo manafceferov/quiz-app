@@ -28,7 +28,6 @@ public class ParticipantControllerAdvice {
                 Participant participant = participantService.findByEmail(userDetails.getUsername());
                 model.addAttribute("participant", participant);
             } catch (Exception e) {
-                // Xəta olarsa heç nə etmə
             }
         }
     }
