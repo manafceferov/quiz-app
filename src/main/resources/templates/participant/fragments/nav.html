@@ -9,34 +9,28 @@
         <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
             <ul class="navbar-nav align-items-center">
 
-                <!-- Ana səhifə -->
                 <li class="nav-item">
                     <a class="nav-link" th:href="@{/}" data-path="/">Ana səhifə</a>
                 </li>
 
-                <!-- İmtahanlarım -->
                 <li class="nav-item" sec:authorize="hasRole('PARTICIPANT')">
                     <a class="nav-link" th:href="@{/quiz/my-exams}" data-path="/quiz/my-exams">İmtahanlar</a>
                 </li>
 
-                <!-- Mövzular -->
                 <li class="nav-item" sec:authorize="hasRole('PARTICIPANT')">
                     <a class="nav-link" th:href="@{/participant/topics}" data-path="/participant/topics">Mövzular</a>
                 </li>
 
-                <!-- AI Quiz -->
                 <li class="nav-item" sec:authorize="hasRole('PARTICIPANT')">
                     <a class="nav-link" th:href="@{/participant/ai-quiz}" data-path="/participant/ai-quiz">
                         <i class="fas fa-robot"></i> AI Quiz
                     </a>
                 </li>
 
-                <!-- Dark Mode -->
                 <li class="nav-item ms-3">
                     <button id="darkModeToggle" class="btn btn-secondary btn-sm" type="button">🌑</button>
                 </li>
 
-                <!-- PROFIL AVATAR DROPDOWN -->
                 <li class="nav-item ms-3" sec:authorize="hasRole('PARTICIPANT')" th:if="${participant != null}">
                     <div class="dropdown">
                         <a href="#"
@@ -45,14 +39,12 @@
                            data-bs-toggle="dropdown"
                            aria-expanded="false">
 
-                            <!-- Profil şəkli varsa -->
                             <img th:if="${participant.attachment != null && participant.attachment.fileUrl != null}"
                                  th:src="@{${participant.attachment.fileUrl}}"
                                  alt="Profil"
                                  class="rounded-circle profile-avatar"
                                  style="width: 40px; height: 40px; object-fit: cover; border: 2px solid #fff;">
 
-                            <!-- Şəkil yoxdursa - ilk hərf -->
                             <div th:if="${participant.attachment == null || participant.attachment.fileUrl == null}"
                                  class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center profile-avatar"
                                  style="width: 40px; height: 40px; font-size: 18px; font-weight: bold; border: 2px solid #fff;">
@@ -60,19 +52,18 @@
                             </div>
                         </a>
 
-                        <!-- Dropdown menyu -->
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
 
-                            <!-- Profil -->
                             <li>
                                 <a class="dropdown-item" th:href="@{/participants/profile}">
                                     <i class="fas fa-user me-2"></i> Profil
                                 </a>
                             </li>
 
-                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
 
-                            <!-- Çıxış -->
                             <li>
                                 <a class="dropdown-item text-danger" th:href="@{/logout}">
                                     <i class="fas fa-sign-out-alt me-2"></i> Çıxış
@@ -82,7 +73,6 @@
                     </div>
                 </li>
 
-                <!-- Login -->
                 <li class="nav-item ms-3" sec:authorize="!hasRole('PARTICIPANT')">
                     <a class="btn btn-outline-light btn-sm" th:href="@{/login}">Giriş</a>
                 </li>
@@ -114,7 +104,6 @@
         transition: background-color 0.2s;
     }
 
-    /* Light mode */
     body:not(.dark-mode) .dropdown-menu {
         background-color: #ffffff;
         border: 1px solid #dee2e6;
@@ -132,7 +121,6 @@
         border-color: #dee2e6;
     }
 
-    /* Dark mode */
     body.dark-mode .dropdown-menu {
         background-color: #343a40;
         border: 1px solid #495057;
@@ -150,7 +138,6 @@
         border-color: #495057;
     }
 
-    /* Çıxış düyməsi - HƏR İKİ MODE-DA QIRMIZI */
     body:not(.dark-mode) .dropdown-item.text-danger {
         color: #dc3545 !important;
     }
@@ -165,7 +152,7 @@
 </style>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const currentPath = window.location.pathname;
         const navLinks = document.querySelectorAll('.navbar-nav .nav-link[data-path]');
         navLinks.forEach(link => {
