@@ -4,6 +4,7 @@ import com.quiz.config.auth.CustomParticipantDetails;
 import com.quiz.entity.Participant;
 import com.quiz.repository.ParticipantRepository;
 import com.quiz.util.session.ParticipantSessionData;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -26,7 +27,9 @@ public class CustomParticipantDetailService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Participant participant = repository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Participant not found with email: " + email));
-
+        if (!participant.getStatus()) {
+            throw new DisabledException("Hesabınız təsdiqlənməyib. Zəhmət olmasa emailinizi yoxlayın.");
+        }
         this.participantSessionData.setParticipant(participant);
         return new CustomParticipantDetails(participant);
     }
