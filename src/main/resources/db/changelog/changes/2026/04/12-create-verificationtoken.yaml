@@ -1,0 +1,48 @@
+databaseChangeLog:
+  - changeSet:
+      id: 12
+      author: jafarov
+      changes:
+        - createTable:
+            tableName: verification_tokens
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+
+              - column:
+                  name: token
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+
+              - column:
+                  name: participant_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: expiry_date
+                  type: timestamp
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: verified
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: verification_tokens
+            baseColumnNames: participant_id
+            referencedTableName: participants
+            referencedColumnNames: id
+            constraintName: fk_verification_participant
+            onDelete: CASCADE
