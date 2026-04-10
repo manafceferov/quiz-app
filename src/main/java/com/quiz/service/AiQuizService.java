@@ -83,17 +83,14 @@ public class AiQuizService {
                 .header("anthropic-version", "2023-06-01")
                 .POST(HttpRequest.BodyPublishers.ofString(objectMapper.writeValueAsString(requestBody)))
                 .build();
-
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
         if (response.statusCode() != 200) {
             throw new RuntimeException("AI API xətası: " + response.body());
         }
-
         Map<String, Object> responseMap = objectMapper.readValue(response.body(), Map.class);
         List<Map<String, Object>> content = (List<Map<String, Object>>) responseMap.get("content");
         String text = (String) content.get(0).get("text");
-
         String cleanJson = text.replace("```json", "").replace("```", "").trim();
         return objectMapper.readValue(cleanJson, AiQuizResponse.class);
     }
@@ -134,7 +131,6 @@ public class AiQuizService {
             question.setByParticipant(participantId);
             Question savedQuestion = questionRepository.save(question);
             System.out.println("Question saved: " + savedQuestion.getId());
-
             List<Map<String, Object>> answers = (List<Map<String, Object>>) questionData.get("answers");
             for (Map<String, Object> answerData : answers) {
                 Answer answer = new Answer();
@@ -165,7 +161,6 @@ public class AiQuizService {
         if (matcher.find()) {
             questionCount = Integer.parseInt(matcher.group(1));
         }
-
         String topicName = "Ümumi Bilik Testi";
         String p = prompt.toLowerCase();
 
