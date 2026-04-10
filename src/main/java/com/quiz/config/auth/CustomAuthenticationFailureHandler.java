@@ -31,8 +31,8 @@ public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationF
 
         String errorMessage = "Email və ya şifrə yanlışdır!";
 
-        if (exception instanceof DisabledException) {
-            errorMessage = "Girişinizə qadağa qoyulub!";
+        if (exception.getCause() instanceof DisabledException || exception instanceof DisabledException) {
+            errorMessage = "Hesabınız təsdiqlənməyib. Zəhmət olmasa emailinizi yoxlayın.";
         }
 
         setDefaultFailureUrl(loginUrl + "?error=true&message=" + URLEncoder.encode(errorMessage, "UTF-8"));

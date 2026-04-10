@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,12 +39,14 @@ public class AiQuizController {
         if (csrfToken != null) {
             model.addAttribute("_csrf", csrfToken);
         }
+
         if (authentication != null && authentication.isAuthenticated()) {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             Participant participant =
                     participantService.findByEmail(userDetails.getUsername());
             model.addAttribute("participant", participant);
         }
+
         return "participant/ai-quiz/create";
     }
 
@@ -51,18 +54,27 @@ public class AiQuizController {
     @ResponseBody
     public Map<String, Object> generateQuiz(@RequestBody Map<String,String> request) {
         Map<String, Object> response = new HashMap<>();
+
         try {
             String prompt = request.get("prompt");
+
             if (prompt == null || prompt.isBlank()) {
                 throw new IllegalArgumentException("Prompt boş ola bilməz");
             }
+
+            // 🔥 BURADA AUTO FIX
+            prompt = normalizePrompt(prompt);
+
             AiQuizResponse result = aiQuizService.generateQuiz(prompt);
+
             response.put("success", true);
             response.put("data", result);
+
         } catch (Exception e) {
             response.put("success", false);
             response.put("error", e.getMessage() != null ? e.getMessage() : "Naməlum xəta");
         }
+
         return response;
     }
 
@@ -74,14 +86,35 @@ public class AiQuizController {
     ) {
         try {
             String email = authentication.getName();
+
             aiQuizService.saveQuizToDatabase(email, topicName, questionsJson);
+
             redirectAttributes.addFlashAttribute("success", "Quiz uğurla yaradıldı!");
             return "redirect:/participant/topics";
+
         } catch (Exception e) {
             System.err.println("Controller error: " + e.getMessage());
             e.printStackTrace();
+
             redirectAttributes.addFlashAttribute("error", "Xəta: " + e.getMessage());
             return "redirect:/participant/ai-quiz";
         }
+    }
+
+    // ✅ YENİ ƏLAVƏ OLUNAN METOD
+    private String normalizePrompt(String prompt) {
+        if (prompt == null || prompt.isBlank()) {
+            return prompt;
+        }
+
+        String p = prompt.toLowerCase();
+
+        // Əgər artıq "sual" və ya "yarat" varsa dəyişmirik
+        if (p.contains("sual") || p.contains("yarat")) {
+            return prompt;
+        }
+
+        // Sadəcə topic yazılıbsa → avtomatik genişləndiririk
+        return prompt + " haqqında 5 sual yarat";
     }
 }
