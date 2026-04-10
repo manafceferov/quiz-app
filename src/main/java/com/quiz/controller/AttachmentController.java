@@ -28,14 +28,11 @@ public class AttachmentController extends BaseController {
                                    MultipartFile file,
                                    RedirectAttributes redirectAttributes
     ) {
-
         if (file.isEmpty()) {
             redirectAttributes.addFlashAttribute("message", "Lütfen bir dosya seçin");
             return "redirect:uploadStatus";
         }
-
         try {
-
             byte[] bytes = file.getBytes();
             Path path = Paths.get(UPLOADED_FOLDER + file.getOriginalFilename());
             Files.write(path, bytes);
@@ -46,7 +43,6 @@ public class AttachmentController extends BaseController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return "redirect:/uploadStatus";
     }
 

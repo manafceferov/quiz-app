@@ -16,7 +16,6 @@
         margin-bottom: 20px;
     }
 
-    /* Dark mode support */
     body.dark-mode .chat-container {
         background: #2d3748;
     }
@@ -237,7 +236,6 @@
 
         <div class="card-body">
 
-            <!-- Chat Container -->
             <div class="chat-container" id="chatContainer">
                 <div class="ai-message message">
                     <strong><i class="fas fa-robot"></i> AI Köməkçi:</strong>
@@ -258,27 +256,38 @@
                 <span class="ms-2">Cavab yazılır...</span>
             </div>
 
-            <!-- Example Prompts -->
             <div class="example-prompts">
                 <small class="text-muted me-2"><i class="fas fa-magic"></i> Nümunələr:</small>
-                <div class="example-prompt" onclick="fillPrompt('Java dilində OOP konseptləri haqqında 5 sual yarat')">
-                    <i class="fab fa-java"></i> Java OOP - 5 sual
+
+                <div class="example-prompt" onclick="fillPrompt('Java haqqında 5 sual yarat')">
+                    <i class="fab fa-java"></i> Java - 5 sual
                 </div>
-                <div class="example-prompt" onclick="fillPrompt('Spring Boot haqqında orta çətinlikdə 10 sual yarat')">
-                    <i class="fas fa-leaf"></i> Spring Boot - 10 sual
+
+                <div class="example-prompt" onclick="fillPrompt('Spring haqqında 5 sual yarat')">
+                    <i class="fas fa-leaf"></i> Spring - 5 sual
                 </div>
-                <div class="example-prompt" onclick="fillPrompt('PostgreSQL verilənlər bazası haqqında çətin 7 sual yarat')">
-                    <i class="fas fa-database"></i> PostgreSQL - 7 sual
+
+                <div class="example-prompt" onclick="fillPrompt('Hibernate haqqında 5 sual yarat')">
+                    <i class="fas fa-database"></i> Hibernate - 5 sual
                 </div>
-                <div class="example-prompt" onclick="fillPrompt('HTML və CSS əsasları haqqında asan 8 sual yarat')">
-                    <i class="fab fa-html5"></i> HTML/CSS - 8 sual
+
+                <div class="example-prompt" onclick="fillPrompt('SQL haqqında 5 sual yarat')">
+                    <i class="fas fa-table"></i> SQL - 5 sual
                 </div>
-                <div class="example-prompt" onclick="fillPrompt('JavaScript ES6 xüsusiyyətləri haqqında 6 sual yarat')">
-                    <i class="fab fa-js"></i> JavaScript - 6 sual
+
+                <div class="example-prompt" onclick="fillPrompt('Docker haqqında 5 sual yarat')">
+                    <i class="fab fa-docker"></i> Docker - 5 sual
+                </div>
+
+                <div class="example-prompt" onclick="fillPrompt('Liquibase haqqında 5 sual yarat')">
+                    <i class="fas fa-exchange-alt"></i> Liquibase - 5 sual
+                </div>
+
+                <div class="example-prompt" onclick="fillPrompt('JavaScript haqqında 5 sual yarat')">
+                    <i class="fab fa-js"></i> JavaScript - 5 sual
                 </div>
             </div>
 
-            <!-- Input Form -->
             <form id="promptForm" class="mt-3">
                 <div class="input-group">
                     <textarea class="form-control prompt-input"
@@ -297,7 +306,6 @@
                 </div>
             </form>
 
-            <!-- Results Container -->
             <div id="resultsContainer" style="display: none;">
                 <hr class="my-4">
                 <div class="alert alert-success">
@@ -330,7 +338,6 @@
 <script>
     let currentQuizData = null;
 
-    // CSRF token əldə et
     function getCsrfToken() {
         const metaToken = document.querySelector('meta[name="_csrf"]');
         if (metaToken) {
@@ -347,7 +354,6 @@
         return '';
     }
 
-    // Page yüklənəndə CSRF əlavə et
     document.addEventListener('DOMContentLoaded', function() {
         const saveForm = document.getElementById('saveForm');
         if (saveForm && !saveForm.querySelector('input[name="_csrf"]')) {
@@ -361,7 +367,6 @@
         console.log('Page loaded, CSRF:', getCsrfToken());
     });
 
-    // Form validasiyası
     function validateForm() {
         const topicName = document.getElementById('topicName').value;
         const questionsJson = document.getElementById('questionsJson').value;
@@ -380,7 +385,6 @@
         return true;
     }
 
-    // Prompt form submit
     document.getElementById('promptForm').addEventListener('submit', async (e) => {
         e.preventDefault();
 
@@ -491,7 +495,6 @@
 
         quizPreview.innerHTML = html;
 
-        // Form məlumatlarını doldur
         document.getElementById('topicName').value = data.topicName;
         document.getElementById('questionsJson').value = JSON.stringify(data.questions);
 
