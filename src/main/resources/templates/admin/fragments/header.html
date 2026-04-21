@@ -12,31 +12,29 @@
 
     <title>Quiz Admin</title>
 
-    <!-- Custom fonts for this template-->
     <link th:href="@{/admin/sb-admin/vendor/fontawesome-free/css/all.min.css}" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+          rel="stylesheet">
     <link th:href="@{/admin/sb-admin/css/sb-admin-2.min.css}" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-bs4.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css"
+          rel="stylesheet">
     <link rel="stylesheet" th:href="@{/admin/sb-admin/css/costum.css}">
 
-    <!-- SIDEBAR FIX CSS -->
     <style>
-        /* Sidebar-ı flexbox olaraq təşkil et */
         #accordionSidebar {
             display: flex !important;
             flex-direction: column !important;
             height: 100vh !important;
             overflow-y: auto !important;
-            overflow-x: hidden !important; /* Horizontal scroll-u gizlət */
-            position: fixed !important; /* Sidebar həmişə sabit qalsın */
+            overflow-x: hidden !important;
+            position: fixed !important;
             left: 0 !important;
             top: 0 !important;
             z-index: 1000 !important;
         }
 
-        /* Scrollbar-ı gizlət (bütün brauzerlər üçün) */
         #accordionSidebar::-webkit-scrollbar {
             width: 0px;
             height: 0px;
@@ -44,38 +42,32 @@
         }
 
         #accordionSidebar {
-            -ms-overflow-style: none;  /* IE və Edge */
-            scrollbar-width: none;  /* Firefox */
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
 
-        /* Toggle düyməsi üçün sticky position */
         #accordionSidebar #sidebarToggle {
             margin-top: auto !important;
         }
 
-        /* Sidebar message/card-ı gizlət */
         .sidebar-card {
             display: none !important;
         }
 
-        /* Sidebar-dəki bütün reklam elementlərini gizlət */
         #accordionSidebar .sidebar-card,
         #accordionSidebar .card {
             display: none !important;
         }
 
-        /* Content-in sidebar ilə düzgün işləməsi üçün */
         #content-wrapper {
-            margin-left: 224px !important; /* Default - sidebar açıq */
+            margin-left: 224px !important;
             transition: margin-left 0.3s ease;
         }
 
-        /* Sidebar kiçildikdə content-in tam genişlikdə olması */
         body.sidebar-toggled #content-wrapper {
-            margin-left: 6.5rem !important; /* Kiçildilmiş sidebar width */
+            margin-left: 6.5rem !important;
         }
 
-        /* Mobil üçün düzəliş */
         @media (max-width: 768px) {
             #content-wrapper {
                 margin-left: 0 !important;

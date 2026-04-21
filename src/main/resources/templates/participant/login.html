@@ -90,9 +90,11 @@
                             <form id="login-form" th:action="@{/login}" method="post" role="form"
                                   style="display: block;">
 
-                                <div th:if="${param.message}" class="alert alert-warning" th:text="${param.message}"></div>
+                                <div th:if="${param.message}" class="alert alert-warning"
+                                     th:text="${param.message}"></div>
 
-                                <div th:if="${param.error != null and param.message == null}" class="alert alert-danger">
+                                <div th:if="${param.error != null and param.message == null}"
+                                     class="alert alert-danger">
                                     Email və ya şifrə yanlışdır!
                                 </div>
 

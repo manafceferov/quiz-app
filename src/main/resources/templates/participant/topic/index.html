@@ -138,10 +138,8 @@
 
 <script th:inline="javascript">
     document.addEventListener('DOMContentLoaded', () => {
-        // Alert auto hide
         setTimeout(() => $(".alert").hide(2000), 3000);
 
-        // Bootstrap Toggle
         $('[data-toggle="toggle"]').bootstrapToggle({
             on: '<i class="fas fa-check"></i> On',
             off: '<i class="fas fa-times"></i> Off',
@@ -149,7 +147,6 @@
             offstyle: 'danger'
         });
 
-        // Delete modal
         $('.delete-btn').on('click', e => {
             e.preventDefault();
             $('#modal-confirm_delete').data('url', e.currentTarget.dataset.url);
@@ -160,7 +157,6 @@
             window.location.href = $('#modal-confirm_delete').data('url');
         });
 
-        // Enable Bootstrap tooltips
         const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
         const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl)

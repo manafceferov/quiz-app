@@ -14,16 +14,16 @@
     </div>
 
 
-<!--        <div class="card-header bg-secondary text-white">-->
-<!--            <h5>Cavabların siyahısı</h5>-->
-<!--        </div>-->
-        <div class="card-body">
-            <div th:each="answer, iterStat : ${result.answers}" class="mb-3 border-bottom pb-2">
-                <p><strong>Sual [[${iterStat.index + 1}]]:</strong> <span
-                        th:text="${answer.questionText}">Sual mətni</span></p>
-                <p><strong>Sizin cavabınız:</strong> <span th:text="${answer.answerText}">Cavab mətni</span></p>
-            </div>
+    <!--        <div class="card-header bg-secondary text-white">-->
+    <!--            <h5>Cavabların siyahısı</h5>-->
+    <!--        </div>-->
+    <div class="card-body">
+        <div th:each="answer, iterStat : ${result.answers}" class="mb-3 border-bottom pb-2">
+            <p><strong>Sual [[${iterStat.index + 1}]]:</strong> <span
+                    th:text="${answer.questionText}">Sual mətni</span></p>
+            <p><strong>Sizin cavabınız:</strong> <span th:text="${answer.answerText}">Cavab mətni</span></p>
         </div>
+    </div>
 
 
     <div class="mt-4 d-flex justify-content-end">

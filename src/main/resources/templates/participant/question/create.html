@@ -19,7 +19,11 @@
         </div>
 
         <div class="card-body">
-            <form th:action="@{/participant/questions}"
+            <div id="radioErrorAlert" class="alert alert-danger d-none" role="alert">
+                <strong>Diqqət!</strong> Düzgün cavabı işarələməmisiniz.
+            </div>
+
+            <form id="questionForm" th:action="@{/participant/questions}"
                   th:object="${request}"
                   method="POST"
                   enctype="multipart/form-data"
@@ -27,7 +31,6 @@
 
                 <input type="hidden" th:field="*{topicId}"/>
 
-                <!-- Sual -->
                 <div class="form-row mb-3">
                     <div class="form-group col-md-12">
                         <label for="questionEditor" style="font-weight: bold; color: black;">Sual:</label>
@@ -38,21 +41,15 @@
                     </div>
                 </div>
 
-                <!-- Cavablar -->
                 <div class="answers" id="answerList">
-
                     <div class="form-row">
                         <div class="form-group col-md-12">
                             <label style="font-weight: bold; color: black;">Cavablar:</label>
                         </div>
                     </div>
 
-                    <!-- İlk cavab (default) -->
                     <div class="mb-4">
-
                         <div class="d-flex align-items-start gap-3">
-
-                            <!-- Sol: Cavab Summernote -->
                             <div class="flex-grow-1">
                                 <textarea class="form-control summernote"
                                           name="answers[0].answer"
@@ -60,47 +57,43 @@
                                           required></textarea>
                             </div>
 
-                            <!-- Sağ: radio + toggle + sil -->
-                            <div class="d-flex align-items-center" style="gap: 12px;">
+                            <div class="d-flex flex-column align-items-center" style="gap: 5px;">
+                                <div class="d-flex align-items-center" style="gap: 12px;">
+                                    <input class="form-check-input correct-radio"
+                                           type="radio"
+                                           name="correctAnswerIndex"
+                                           id="answer0"
+                                           value="0"
+                                           style="width: 22px; height: 22px; cursor: pointer; border: 2px solid #555;">
 
-                                <!-- Doğru cavab -->
-                                <input class="form-check-input"
-                                       type="radio"
-                                       name="correctAnswerIndex"
-                                       id="answer0"
-                                       value="0"
-                                       required>
+                                    <input type="checkbox"
+                                           name="answers[0].isActive"
+                                           data-toggle="toggle"
+                                           data-on="On" data-off="Off"
+                                           data-onstyle="success" data-offstyle="danger"
+                                           class="answer-toggle"/>
 
-                                <!-- Aktiv -->
-                                <input type="checkbox"
-                                       name="answers[0].isActive"
-                                       data-toggle="toggle"
-                                       data-on="On" data-off="Off"
-                                       data-onstyle="success" data-offstyle="danger"
-                                       class="answer-toggle"/>
+                                    <input type="hidden" name="answers[0].isActive" value="false"/>
 
-                                <input type="hidden" name="answers[0].isActive" value="false"/>
-
-                                <!-- Sil -->
-                                <button type="button" class="btn btn-danger btn-sm trash">
-                                    Sil
-                                </button>
-
+                                    <button type="button" class="btn btn-danger btn-sm trash">
+                                        Sil
+                                    </button>
+                                </div>
+                                <small class="radio-error-text text-danger d-none"
+                                       style="font-weight: bold; white-space: nowrap; font-size: 11px;">
+                                    Düzgün cavabı seçin
+                                </small>
                             </div>
-
                         </div>
                     </div>
-
                 </div>
 
-                <!-- Yeni cavab əlavə et -->
                 <div class="form-row mt-3">
                     <div class="form-group col-md-3">
                         <button type="button" class="btn btn-primary plus">+</button>
                     </div>
                 </div>
 
-                <!-- Əlavə Et düyməsi -->
                 <div class="form-group mt-4 d-flex justify-content-end">
                     <button type="submit" class="btn btn-success">
                         Əlavə Et
@@ -112,75 +105,90 @@
     </div>
 </div>
 
-
 <script th:inline="javascript">
     $(document).ready(function () {
         $('.summernote').summernote({
-            height: 250,
-            placeholder: 'Sual mətnini yazın...'
+            height: 200,
+            placeholder: 'Mətn daxil edin...'
         });
 
         $('.answer-toggle').bootstrapToggle();
-    });
 
-    let answerIndex = 1;
+        let answerIndex = 1;
 
-    $('.plus').click(function () {
+        $('.plus').click(function () {
+            let answer = `
+            <div class="mb-4">
+                <div class="d-flex align-items-start gap-3">
+                    <div class="flex-grow-1">
+                        <textarea class="form-control summernote"
+                                  name="answers[${answerIndex}].answer"
+                                  placeholder="Cavab mətnini yazın..."
+                                  required></textarea>
+                    </div>
+                    <div class="d-flex flex-column align-items-center" style="gap: 5px;">
+                        <div class="d-flex align-items-center" style="gap: 12px;">
+                            <input class="form-check-input correct-radio"
+                                   type="radio"
+                                   name="correctAnswerIndex"
+                                   id="answer${answerIndex}"
+                                   value="${answerIndex}"
+                                   style="width: 22px; height: 22px; cursor: pointer; border: 2px solid #555;">
 
-        let answer = `
-        <div class="mb-4">
+                            <input type="checkbox"
+                                   name="answers[${answerIndex}].isActive"
+                                   data-toggle="toggle"
+                                   data-on="On" data-off="Off"
+                                   data-onstyle="success" data-offstyle="danger"
+                                   class="answer-toggle"/>
 
-            <div class="d-flex align-items-start gap-3">
+                            <input type="hidden" name="answers[${answerIndex}].isActive" value="false"/>
 
-                <div class="flex-grow-1">
-                    <textarea class="form-control summernote"
-                              name="answers[${answerIndex}].answer"
-                              placeholder="Cavab mətnini yazın..."
-                              required></textarea>
+                            <button type="button" class="btn btn-danger btn-sm trash">
+                                Sil
+                            </button>
+                        </div>
+                        <small class="radio-error-text text-danger d-none" style="font-weight: bold; white-space: nowrap; font-size: 11px;">
+                            Düzgün cavabı seçin
+                        </small>
+                    </div>
                 </div>
+            </div>`;
 
-                <div class="d-flex align-items-center" style="gap: 12px;">
+            const $answer = $(answer);
+            $('.answers').append($answer);
+            $answer.find('.summernote').summernote({height: 200});
+            $answer.find('.answer-toggle').bootstrapToggle();
+            answerIndex++;
+        });
 
-                    <input class="form-check-input"
-                           type="radio"
-                           name="correctAnswerIndex"
-                           id="answer${answerIndex}"
-                           value="${answerIndex}">
+        $(document).on('click', '.trash', function () {
+            $(this).closest('div.mb-4').remove();
+        });
 
-                    <input type="checkbox"
-                           name="answers[${answerIndex}].isActive"
-                           data-toggle="toggle"
-                           data-on="On" data-off="Off"
-                           data-onstyle="success" data-offstyle="danger"
-                           class="answer-toggle"/>
+        $('#questionForm').on('submit', function (e) {
+            const isChecked = $("input[name='correctAnswerIndex']:checked").length > 0;
 
-                    <input type="hidden" name="answers[${answerIndex}].isActive" value="false"/>
+            if (!isChecked) {
+                e.preventDefault();
+                $('.radio-error-text').removeClass('d-none');
+                $('#radioErrorAlert').removeClass('d-none');
+                $('.correct-radio').css('border', '2px solid red');
+                $('html, body').animate({
+                    scrollTop: $(".correct-radio").first().offset().top - 250
+                }, 500);
 
-                    <button type="button" class="btn btn-danger btn-sm trash">
-                        Sil
-                    </button>
+                return false;
+            }
+        });
 
-                </div>
-
-            </div>
-
-        </div>`;
-
-        const $answer = $(answer);
-        $('.answers').append($answer);
-
-        $answer.find('.summernote').summernote({ height: 250 });
-        $answer.find('.answer-toggle').bootstrapToggle();
-
-        answerIndex++;
-    });
-
-
-    $(document).on('click', '.trash', function () {
-        $(this).closest('div.mb-4').remove();
+        $(document).on('change', '.correct-radio', function () {
+            $('.radio-error-text').addClass('d-none');
+            $('#radioErrorAlert').addClass('d-none');
+            $('.correct-radio').css('border', '2px solid #555');
+        });
     });
 </script>
-
 
 <th:block th:replace="~{participant/fragments/footer}"></th:block>
 
