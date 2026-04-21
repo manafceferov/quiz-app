@@ -37,8 +37,14 @@
     }
 
     @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 
     .user-message {
@@ -98,8 +104,12 @@
     }
 
     @keyframes typing {
-        0%, 60%, 100% { transform: translateY(0); }
-        30% { transform: translateY(-10px); }
+        0%, 60%, 100% {
+            transform: translateY(0);
+        }
+        30% {
+            transform: translateY(-10px);
+        }
     }
 
     .question-preview {
@@ -161,7 +171,7 @@
 
     .prompt-input:focus {
         border-color: #007bff;
-        box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, .25);
         outline: none;
     }
 
@@ -315,7 +325,8 @@
                 <h4><i class="fas fa-clipboard-check"></i> Yaradılan Quiz</h4>
                 <div id="quizPreview"></div>
 
-                <form id="saveForm" th:action="@{/participant/ai-quiz/save}" method="post" onsubmit="return validateForm()">
+                <form id="saveForm" th:action="@{/participant/ai-quiz/save}" method="post"
+                      onsubmit="return validateForm()">
                     <input type="hidden" name="topicName" id="topicName">
                     <input type="hidden" name="questionsJson" id="questionsJson">
 
@@ -354,7 +365,7 @@
         return '';
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const saveForm = document.getElementById('saveForm');
         if (saveForm && !saveForm.querySelector('input[name="_csrf"]')) {
             const csrfInput = document.createElement('input');
@@ -413,7 +424,7 @@
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': getCsrfToken()
                 },
-                body: JSON.stringify({ prompt: prompt })
+                body: JSON.stringify({prompt: prompt})
             });
 
             console.log('Response status:', response.status);
@@ -505,7 +516,7 @@
         document.getElementById('saveBtn').disabled = false;
 
         setTimeout(() => {
-            resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            resultsContainer.scrollIntoView({behavior: 'smooth', block: 'start'});
         }, 100);
     }
 
@@ -551,7 +562,7 @@
         return div.innerHTML;
     }
 
-    document.getElementById('promptInput').addEventListener('input', function() {
+    document.getElementById('promptInput').addEventListener('input', function () {
         this.style.height = 'auto';
         this.style.height = (this.scrollHeight) + 'px';
     });

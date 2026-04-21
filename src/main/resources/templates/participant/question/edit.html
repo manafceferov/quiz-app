@@ -52,7 +52,6 @@
 
                         <div class="d-flex align-items-start gap-3">
 
-                            <!-- Sol: Cavabın Summernote hissəsi -->
                             <div class="flex-grow-1">
             <textarea class="form-control summernote"
                       th:field="*{answers[__${iterStat.index}__].answer}"
@@ -60,10 +59,8 @@
                       required></textarea>
                             </div>
 
-                            <!-- Sağ: radio + toggle + sil yan-yana -->
                             <div class="d-flex align-items-center" style="gap: 12px;">
 
-                                <!-- Doğru cavab radio -->
                                 <input class="form-check-input"
                                        type="radio"
                                        name="correctAnswerIndex"
@@ -71,7 +68,6 @@
                                        th:value="${iterStat.index}"
                                        th:attr="checked=${answer.isCorrect} ? 'checked' : null"/>
 
-                                <!-- Aktiv checkbox -->
                                 <input type="checkbox"
                                        th:name="|answers[${iterStat.index}].isActive|"
                                        th:attr="checked=${answer.isActive} ? 'checked' : null"
@@ -84,7 +80,6 @@
                                        th:name="|answers[${iterStat.index}].isActive|"
                                        value="false"/>
 
-                                <!-- Sil düyməsi -->
                                 <button type="button" class="btn btn-danger btn-sm trash">
                                     Sil
                                 </button>
@@ -137,7 +132,6 @@
 
             <div class="d-flex align-items-start gap-3">
 
-                <!-- Sol: Summernote -->
                 <div class="flex-grow-1">
                     <textarea class="form-control summernote"
                               name="answers[${answerIndex}].answer"
@@ -145,7 +139,6 @@
                               required></textarea>
                 </div>
 
-                <!-- Sağ: radio + toggle + sil -->
                 <div class="d-flex align-items-center" style="gap: 12px;">
 
                     <input class="form-check-input"
@@ -182,7 +175,6 @@
         const $answer = $(answer);
         $('#answerList').append($answer);
 
-        // Summernote initialize
         $answer.find('.summernote').summernote({
             height: 250,
             placeholder: 'Cavab yazın...',
@@ -196,7 +188,6 @@
             }
         });
 
-        // Toggle initialize
         $answer.find('.answer-toggle').bootstrapToggle();
 
         answerIndex++;

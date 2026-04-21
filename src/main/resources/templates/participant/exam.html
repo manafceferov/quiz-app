@@ -61,7 +61,7 @@
 
 <script th:inline="javascript">
     /*<![CDATA[*/
-    const topicId = /*[[${topicId}]]*/ 0; // Thymeleaf ilə topicId-ni daxil edin, varsayılan 0
+    const topicId = /*[[${topicId}]]*/ 0;
     let collectedAnswers = [];
     try {
         const storedAnswers = localStorage.getItem(`collectedAnswers_${topicId}`);
@@ -85,15 +85,13 @@
 
         const selectedId = parseInt(selected.value);
 
-        // Yalnız cari sualı əlavə et və təkrarlamaları qarşılamaq
         let existingIndex = collectedAnswers.findIndex(item => item.questionId === questionId);
         if (existingIndex !== -1) {
-            collectedAnswers[existingIndex] = { questionId: questionId, answerId: selectedId };
+            collectedAnswers[existingIndex] = {questionId: questionId, answerId: selectedId};
         } else {
-            collectedAnswers.push({ questionId: questionId, answerId: selectedId });
+            collectedAnswers.push({questionId: questionId, answerId: selectedId});
         }
 
-        // Cavabları topic-a uyğun saxla
         localStorage.setItem(`collectedAnswers_${topicId}`, JSON.stringify(collectedAnswers));
 
         if (questionIndex + 1 === totalQuestions) {

@@ -113,7 +113,6 @@
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Çıx</button>
-                <!-- ↓↓↓ URL run‑time‑da JS ilə yerləşdiriləcək -->
                 <button type="button" class="btn btn-danger" id="modal-confirm_delete">Sil</button>
             </div>
         </div>
@@ -140,31 +139,25 @@
 </script>
 
 <script th:inline="javascript">
-    /*<![CDATA[*/
     document.addEventListener('DOMContentLoaded', () => {
 
-        /* Alert‑i gizlətmə hissəsi eyni qalır */
         setTimeout(() => $(".alert").hide(2000), 3000);
 
-        /*  --- Silmə modalı --- */
-        // Bütün qırmızı zibil‑qutu düymələrinə qulaq as
         document.querySelectorAll('.delete-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
-                e.preventDefault();                 // # href‑ə getməsin
-                const url = btn.dataset.url;        // th:data-url
+                e.preventDefault();
+                const url = btn.dataset.url;
                 $('#modal-confirm_delete').data('url', url);
                 $('#deleteModal').modal('show');
             });
         });
 
-        // Modal içindəki “Sil” düyməsi
         $('#modal-confirm_delete').on('click', function () {
             const url = $(this).data('url');
-            window.location.href = url;           // GET → controller silir
+            window.location.href = url;
         });
 
     });
-    /*]]>*/
 </script>
 
 <th:block th:replace="~{admin/fragments/footer}"></th:block>

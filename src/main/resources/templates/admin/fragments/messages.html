@@ -8,10 +8,9 @@
 </div>
 
 <script th:inline="javascript">
-    /* 2 saniyə sonra mesaj yox olsun */
-    setTimeout(function() {
+    setTimeout(function () {
         var flash = document.getElementById('flash-message');
-        if(flash){
+        if (flash) {
             flash.style.display = 'none';
         }
     }, 2000);
