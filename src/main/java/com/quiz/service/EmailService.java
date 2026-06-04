@@ -13,10 +13,9 @@ public class EmailService {
         this.mailSender = mailSender;
     }
 
-    public void sendVerificationEmail(String to,
-                                      String token
-    ) {
-        String link = "http://localhost:2123/verify?token=" + token;
+    public void sendVerificationEmail(String to, String token) {
+        // Localhost əvəzinə canlı linki yaz
+        String link = "https://quiz-app-djn3.onrender.com/verify?token=" + token;
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
         message.setSubject("Email təsdiqi");
