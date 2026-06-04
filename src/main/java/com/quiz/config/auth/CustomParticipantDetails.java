@@ -54,7 +54,7 @@ public class CustomParticipantDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return participant.getStatus();
+        return true;
     }
 
 }
