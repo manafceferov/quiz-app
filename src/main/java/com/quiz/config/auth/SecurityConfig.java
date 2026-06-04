@@ -181,7 +181,7 @@ public class SecurityConfig {
                                 "/",
                                 "/login",
                                 "/register",
-                                "/verify",
+//                                "/verify",
                                 "/css/**", "/js/**", "/images/**", "/files/**",
                                 "/participant/css/**", "/participant/js/**", "/participant/images/**"
                         ).permitAll()

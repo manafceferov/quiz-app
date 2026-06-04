@@ -4,19 +4,15 @@ import com.quiz.dto.participant.ParticipantListDto;
 import com.quiz.dto.profile.ProfileProjectionEditDto;
 import com.quiz.entity.Attachment;
 import com.quiz.entity.Participant;
-import com.quiz.entity.VerificationToken;
 import com.quiz.enums.OwnerType;
 import com.quiz.mapper.ParticipantMapper;
 import com.quiz.repository.ParticipantRepository;
-import com.quiz.repository.VerificationTokenRepository;
 import com.quiz.util.session.AuthSessionData;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Service
 public class ParticipantService {
@@ -26,24 +22,18 @@ public class ParticipantService {
     private final AttachmentService attachmentService;
     private final ParticipantMapper participantMapper;
     private final AuthSessionData authSessionData;
-    private final EmailService emailService;
-    private final VerificationTokenRepository verificationTokenRepository;
 
     public ParticipantService(ParticipantRepository participantRepository,
                               PasswordEncoder passwordEncoder,
                               AttachmentService attachmentService,
                               ParticipantMapper participantMapper,
-                              AuthSessionData authSessionData,
-                              EmailService emailService,
-                              VerificationTokenRepository verificationTokenRepository
+                              AuthSessionData authSessionData
     ) {
         this.participantRepository = participantRepository;
         this.passwordEncoder = passwordEncoder;
         this.attachmentService = attachmentService;
         this.participantMapper = participantMapper;
         this.authSessionData = authSessionData;
-        this.emailService = emailService;
-        this.verificationTokenRepository = verificationTokenRepository;
     }
 
     public Participant register(String firstName,
@@ -55,27 +45,16 @@ public class ParticipantService {
         if (!password.equals(confirmPassword)) {
             throw new IllegalArgumentException("Şifrə və təsdiq uyğun gəlmir");
         }
-
         if (participantRepository.findByEmail(email).isPresent()) {
             throw new IllegalArgumentException("Bu email artıq qeydiyyatdan keçib");
         }
-
         Participant participant = new Participant();
         participant.setFirstName(firstName);
         participant.setLastName(lastName);
         participant.setEmail(email);
         participant.setPassword(passwordEncoder.encode(password));
-        participant.setStatus(false);
-        participant = participantRepository.save(participant);
-
-        String token = UUID.randomUUID().toString();
-        VerificationToken verificationToken = new VerificationToken();
-        verificationToken.setToken(token);
-        verificationToken.setParticipant(participant);
-        verificationToken.setExpiryDate(LocalDateTime.now().plusHours(24));
-        verificationTokenRepository.save(verificationToken);
-        emailService.sendVerificationEmail(email, token);
-        return participant;
+        participant.setStatus(true);
+        return participantRepository.save(participant);
     }
 
     public Participant findByEmail(String username) {
