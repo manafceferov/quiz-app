@@ -20,9 +20,9 @@ spring:
     suffix: .html
 
   datasource:
-    url: jdbc:postgresql://localhost:5433/quizdb
-    username: quizuser
-    password: quizpassword
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -73,3 +73,10 @@ springdoc:
     enabled: true
     operations-sorter: method
     tags-sorter: alpha
+
+logging:
+  level:
+    root: INFO
+    org.hibernate.orm.connections.pooling: OFF
+    org.hibernate.orm.deprecation: OFF
+    org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration: OFF

@@ -47,6 +47,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     runtimeOnly 'org.postgresql:postgresql'
+    runtimeOnly 'org.postgresql:postgresql'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     liquibaseRuntime 'org.liquibase:liquibase-core:4.20.0'
     liquibaseRuntime 'org.postgresql:postgresql'
@@ -76,11 +77,11 @@ tasks.withType(Test) {
 liquibase {
     activities.register('main') {
         arguments = [
-            changelogFile: 'src/main/resources/db/changelog/db.changelog-master.yaml',
-        url          : 'jdbc:postgresql://localhost:5433/quizdb',
-        username     : 'quizuser',
-        password     : 'quizpassword',
-        driver       : 'org.postgresql.Driver'
+                changelogFile: 'src/main/resources/db/changelog/db.changelog-master.yaml',
+                url          : 'jdbc:postgresql://localhost:5433/quizdb',
+                username     : 'quizuser',
+                password     : 'quizpassword',
+                driver       : 'org.postgresql.Driver'
         ]
     }
     runList = 'main'
