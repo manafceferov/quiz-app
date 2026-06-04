@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: 14
+      author: jafarov
+      changes:
+        - addDefaultValue:
+            tableName: participants
+            columnName: status
+            columnDataType: boolean
+            defaultValueBoolean: true
