@@ -31,7 +31,7 @@ open class Participant @JvmOverloads constructor (
     @Column(name = "password", nullable = false, length = 100)
     open var password: String? = null,
 
-    @Column(name = "status", nullable = false)
+    @Column(name = "status", nullable = false, columnDefinition = "boolean default true")
     open var status: Boolean = true,
 
     @Column(name = "phone_number")
