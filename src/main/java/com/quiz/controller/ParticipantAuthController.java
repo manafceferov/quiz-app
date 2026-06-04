@@ -3,7 +3,6 @@ package com.quiz.controller;
 import com.quiz.entity.Participant;
 import com.quiz.entity.VerificationToken;
 import com.quiz.repository.ParticipantRepository;
-import com.quiz.repository.VerificationTokenRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.ui.Model;
 import com.quiz.service.ParticipantService;
@@ -19,15 +18,12 @@ public class ParticipantAuthController extends BaseController{
 
     private final ParticipantService participantService;
     private final ParticipantRepository participantRepository;
-    private final VerificationTokenRepository verificationTokenRepository;
 
     public ParticipantAuthController(ParticipantService participantService,
-                                     ParticipantRepository participantRepository,
-                                     VerificationTokenRepository verificationTokenRepository
+                                     ParticipantRepository participantRepository
     ) {
         this.participantService = participantService;
         this.participantRepository = participantRepository;
-        this.verificationTokenRepository = verificationTokenRepository;
     }
 
     @GetMapping("/login")
@@ -47,8 +43,11 @@ public class ParticipantAuthController extends BaseController{
                            RedirectAttributes redirectAttributes
     ) {
         try {
-            participantService.register(firstName, lastName, email, password, confirmPassword);
-            redirectAttributes.addFlashAttribute("success", "Qeydiyyatdan keçdiniz");
+            Participant participant = participantService.register(firstName, lastName, email, password, confirmPassword);
+            participant.setStatus(true);
+            participantRepository.save(participant);
+
+            redirectAttributes.addFlashAttribute("success", "Qeydiyyatdan keçdiniz! İndi daxil ola bilərsiniz.");
             return "redirect:/login";
         } catch (IllegalArgumentException e) {
             model.addAttribute("error", e.getMessage());
@@ -56,22 +55,22 @@ public class ParticipantAuthController extends BaseController{
         }
     }
 
-    @GetMapping("/verify")
-    public String verify(@RequestParam String token,
-                         RedirectAttributes redirectAttributes
-    ) {
-        VerificationToken verificationToken = verificationTokenRepository
-                .findByToken(token)
-                .orElseThrow(() -> new RuntimeException("Token tapılmadı"));
-        if (verificationToken.getExpiryDate().isBefore(LocalDateTime.now())) {
-            redirectAttributes.addFlashAttribute("error", "Token vaxtı bitib");
-            return "redirect:/login";
-        }
-        Participant participant = verificationToken.getParticipant();
-        participant.setStatus(true);
-        participantRepository.save(participant);
-        verificationToken.setVerified(true);
-        redirectAttributes.addFlashAttribute("success", "Hesab təsdiqləndi");
-        return "redirect:/login";
-    }
+//    @GetMapping("/verify")
+//    public String verify(@RequestParam String token,
+//                         RedirectAttributes redirectAttributes
+//    ) {
+//        VerificationToken verificationToken = verificationTokenRepository
+//                .findByToken(token)
+//                .orElseThrow(() -> new RuntimeException("Token tapılmadı"));
+//        if (verificationToken.getExpiryDate().isBefore(LocalDateTime.now())) {
+//            redirectAttributes.addFlashAttribute("error", "Token vaxtı bitib");
+//            return "redirect:/login";
+//        }
+//        Participant participant = verificationToken.getParticipant();
+//        participant.setStatus(true);
+//        participantRepository.save(participant);
+//        verificationToken.setVerified(true);
+//        redirectAttributes.addFlashAttribute("success", "Hesab təsdiqləndi");
+//        return "redirect:/login";
+//    }
 }
