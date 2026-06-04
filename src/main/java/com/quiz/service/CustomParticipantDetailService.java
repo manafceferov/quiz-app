@@ -27,9 +27,9 @@ public class CustomParticipantDetailService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Participant participant = repository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Participant not found with email: " + email));
-        if (!participant.getStatus()) {
-            throw new DisabledException("Hesabınız təsdiqlənməyib. Zəhmət olmasa emailinizi yoxlayın.");
-        }
+//        if (!participant.getStatus()) {
+//            throw new DisabledException("Hesabınız təsdiqlənməyib. Zəhmət olmasa emailinizi yoxlayın.");
+//        }
         this.participantSessionData.setParticipant(participant);
         return new CustomParticipantDetails(participant);
     }
