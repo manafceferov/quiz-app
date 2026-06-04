@@ -20,9 +20,9 @@ spring:
     suffix: .html
 
   datasource:
-    url: jdbc:postgresql://localhost:5433/quizdb
-    username: quizuser
-    password: quizpassword
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -62,7 +62,7 @@ server:
 
 anthropic:
   api:
-    key: sk-ant-api03-BURAYA_COPY_ETDIYIN_KEY_GELIR
+    key: ${ANTHROPIC_API_KEY}
   model: claude-sonnet-4-20250514
 
 springdoc:
@@ -73,3 +73,10 @@ springdoc:
     enabled: true
     operations-sorter: method
     tags-sorter: alpha
+
+logging:
+  level:
+    root: INFO
+    org.hibernate.orm.connections.pooling: OFF
+    org.hibernate.orm.deprecation: OFF
+    org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration: OFF
