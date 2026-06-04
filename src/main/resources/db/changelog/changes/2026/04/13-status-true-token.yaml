@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - changeSet:
+      id: 13
+      author: jafarov
+      changes:
+        - update:
+            tableName: verification_tokens
+            columns:
+              - column:
+                  name: verified
+                  valueBoolean: true
+        - addNotNullConstraint:
+            tableName: verification_tokens
+            columnName: verified
+            columnDataType: boolean
