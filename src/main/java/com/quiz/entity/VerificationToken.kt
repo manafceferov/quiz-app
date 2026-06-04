@@ -29,6 +29,6 @@ open class VerificationToken @JvmOverloads constructor(
     @Column(name = "expiry_date", nullable = false)
     open var expiryDate: LocalDateTime? = null,
 
-    @Column(nullable = false)
-    open var verified: Boolean = false
+    @Column(nullable = true)
+    open var verified: Boolean = true
 )
