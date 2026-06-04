@@ -55,7 +55,7 @@ spring:
             enable: true
 
 server:
-  port: 2123
+  port: ${PORT:2123} # Render mühitində PORT dəyişəni varsa onu istifadə et, yoxdursa 2123-ə keç
   servlet:
     session:
       timeout: 10000m
