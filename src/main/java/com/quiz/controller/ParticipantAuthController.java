@@ -11,10 +11,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import java.time.LocalDateTime;
 
 @Controller
-public class ParticipantAuthController extends BaseController{
+public class ParticipantAuthController extends BaseController {
 
     private final ParticipantService participantService;
     private final ParticipantRepository participantRepository;
@@ -43,9 +44,10 @@ public class ParticipantAuthController extends BaseController{
                            RedirectAttributes redirectAttributes
     ) {
         try {
-            Participant participant = participantService.register(firstName, lastName, email, password, confirmPassword);
+              participantService.register(firstName, lastName, email, password, confirmPassword);
+//            Participant participant = participantService.register(firstName, lastName, email, password, confirmPassword);
 //            participant.setStatus(true);
-            participantRepository.save(participant);
+//            participantRepository.save(participant);
 
             redirectAttributes.addFlashAttribute("success", "Qeydiyyatdan keçdiniz! İndi daxil ola bilərsiniz.");
             return "redirect:/login";
