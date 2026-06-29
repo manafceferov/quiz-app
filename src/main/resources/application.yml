@@ -60,10 +60,10 @@ server:
     session:
       timeout: 10000m
 
-anthropic:
-  api:
-    key: ${ANTHROPIC_API_KEY}
-  model: claude-sonnet-4-20250514
+#anthropic:
+#  api:
+#    key: ${ANTHROPIC_API_KEY}
+#  model: claude-sonnet-4-20250514
 
 springdoc:
   api-docs:
