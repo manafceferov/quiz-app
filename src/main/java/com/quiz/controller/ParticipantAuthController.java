@@ -44,7 +44,7 @@ public class ParticipantAuthController extends BaseController{
     ) {
         try {
             Participant participant = participantService.register(firstName, lastName, email, password, confirmPassword);
-            participant.setStatus(true);
+//            participant.setStatus(true);
             participantRepository.save(participant);
 
             redirectAttributes.addFlashAttribute("success", "Qeydiyyatdan keçdiniz! İndi daxil ola bilərsiniz.");
