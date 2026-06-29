@@ -42,17 +42,17 @@ spring:
       max-file-size: 10MB
       max-request-size: 10MB
 
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username: ${MAIL_USERNAME}
-    password: ${MAIL_PASSWORD}
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
+#  mail:
+#    host: smtp.gmail.com
+#    port: 587
+#    username: ${MAIL_USERNAME}
+#    password: ${MAIL_PASSWORD}
+#    properties:
+#      mail:
+#        smtp:
+#          auth: true
+#          starttls:
+#            enable: true
 
 server:
   port: ${PORT:2123} # Render mühitində PORT dəyişəni varsa onu istifadə et, yoxdursa 2123-ə keç
