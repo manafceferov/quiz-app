@@ -30,7 +30,7 @@ public class CustomParticipantDetailService implements UserDetailsService {
 //        if (!participant.getStatus()) {
 //            throw new DisabledException("Hesabınız təsdiqlənməyib. Zəhmət olmasa emailinizi yoxlayın.");
 //        }
-//        this.participantSessionData.setParticipant(participant);
+        this.participantSessionData.setParticipant(participant);
         return new CustomParticipantDetails(participant);
     }
 }
