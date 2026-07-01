@@ -3,7 +3,7 @@
     <div class="container mt-5">
         <div th:each="q, iterStat : ${detail.questions}" class="mb-4">
             <div class="d-flex align-items-center mb-2">
-                <h5 th:utext="${iterStat.index + 1} + ') ' + ${q.question}">Sual mətni</h5>
+                <h5><span th:text="${iterStat.index + 1} + ') '"></span><span th:utext="${q.question}"></span></h5>
 
                 <a th:if="${iterStat.index == 0}" th:href="@{/quiz/my-exams}" class="btn btn-dark btn-sm ms-auto">
                     Geri
