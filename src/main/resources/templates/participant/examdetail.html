@@ -2,9 +2,13 @@
 <div class="container mt-5"><h2 class="text-center mb-4" th:text="${detail.topicName}">Mövzu Adı</h2>
     <div class="container mt-5">
         <div th:each="q, iterStat : ${detail.questions}" class="mb-4">
-            <div class="d-flex justify-content-between align-items-center mb-2"><h5 th:utext="${q.question}">Sual
-                mətni</h5> <a th:if="${iterStat.index == 0}" th:href="@{/quiz/my-exams}" class="btn btn-dark btn-sm">
-                Geri </a></div>
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h5 th:utext="${iterStat.count} + ') ' + ${q.question}">1) Sual mətni</h5>
+
+                <a th:if="${iterStat.index == 0}" th:href="@{/quiz/my-exams}" class="btn btn-dark btn-sm">
+                    Geri
+                </a>
+            </div>
             <ul class="list-group">
                 <li th:each="a : ${q.answers}" class="list-group-item d-flex justify-content-between align-items-center"
                     th:classappend="(${a.selected && a.correct} ? 'list-group-item-success' : (${a.selected && !a.correct} ? 'list-group-item-danger' : (${!a.selected && a.correct} ? 'list-group-item-warning' : '')))">
